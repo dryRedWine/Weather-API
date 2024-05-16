@@ -10,4 +10,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class SysDto {
+
+    private Long sunrise;
+
+    private Long sunset;
 }

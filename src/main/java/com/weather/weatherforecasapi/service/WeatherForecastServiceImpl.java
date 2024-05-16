@@ -1,10 +1,11 @@
 package com.weather.weatherforecasapi.service;
 
 import com.weather.weatherforecasapi.client.WeatherWebClient;
-import com.weather.weatherforecasapi.dto.forecastDto.ForecastDto;
 import com.weather.weatherforecasapi.dto.GeoResponseDto;
+import com.weather.weatherforecasapi.dto.forecastDto.ForecastDto;
 import com.weather.weatherforecasapi.exceptions.ApiKeyBlankException;
 import com.weather.weatherforecasapi.exceptions.ApiKeyNotFoundException;
+import com.weather.weatherforecasapi.exceptions.CityNotFoundException;
 import com.weather.weatherforecasapi.models.ForecastMapper;
 import com.weather.weatherforecasapi.models.forecast.Forecast;
 import com.weather.weatherforecasapi.storage.ApiKeyStorageInMemory;
@@ -37,11 +38,9 @@ public class WeatherForecastServiceImpl implements WeatherForecastService {
         if (storage.getApiKey() == null)
             throw new ApiKeyNotFoundException("The api key was not found");
         List<GeoResponseDto> geo = client.getGeo(city, apiKey);
-        System.out.println(geo.get(0));
+        if (geo == null)
+            throw new CityNotFoundException("City was not found");
         Forecast forecast = client.getCurrentWeather(geo.get(0), apiKey);
-        // обработка ошибок?
-        System.out.println(forecast);
-        return null;
-//        return ForecastMapper.toForecastDto(forecast);
+        return ForecastMapper.toForecastDto(forecast);
     }
 }

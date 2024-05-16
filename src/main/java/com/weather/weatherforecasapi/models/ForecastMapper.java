@@ -1,44 +1,24 @@
 package com.weather.weatherforecasapi.models;
 
-import com.weather.weatherforecasapi.dto.forecastDto.ForecastDto;
+import com.weather.weatherforecasapi.dto.forecastDto.*;
 import com.weather.weatherforecasapi.models.forecast.Forecast;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ForecastMapper {
 
-//    public static ForecastDto toForecastDto(Forecast forecast) {
-//        return  ForecastDto.builder()
-//                .temperature()
-//                .datetime(forecast.getDatetime())
-//                .name(forecast.getName())
-//                .sys(forecast.getSys())
-//                .timezone(forecast.getTimezone())
-//                .visibility(forecast.getVisibility())
-//                .wind(forecast.getWind())
-//                .weather(forecast.getWeather())
-//                .build();
-//    }
-
-//    {
-//        "weather": {
-//        "main": "Clouds",
-//        "description": "scattered clouds",
-//    },
-//        "temperature": {
-//        "temp": 269.6,
-//                "feels_like": 267.57,
-//    },
-//        "visibility": 10000,
-//            "wind": {
-//        "speed": 1.38,
-//    },
-//        "datetime": 1675744800,
-//            "sys": {
-//        "sunrise": 1675751262,
-//                "sunset": 1675787560
-//    },
-//        "timezone": 3600,
-//            "name": "Zocca",
-//    }
+    public static ForecastDto toForecastDto(Forecast forecast) {
+        var weather = forecast.getWeatherList().get(0);
+        return  ForecastDto.builder()
+                .weatherDto(new WeatherDto(weather.getMain(), weather.getDescription()))
+                .temperature(new Temperature(forecast.getMain().getTemp(), forecast.getMain().getFeelsLike()))
+                .visibility(forecast.getVisibility())
+                .windDto(new WindDto(forecast.getWind().getSpeed()))
+                .datetime(forecast.getDatetime())
+                .name(forecast.getName())
+                .sysDto(new SysDto(forecast.getSys().getSunrise(), forecast.getSys().getSunset()))
+                .timezone(forecast.getTimezone())
+                .name(forecast.getName())
+                .build();
+    }
 }
