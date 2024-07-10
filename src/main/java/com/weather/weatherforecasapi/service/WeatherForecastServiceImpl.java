@@ -8,6 +8,8 @@ import com.weather.weatherforecasapi.exceptions.ApiKeyNotFoundException;
 import com.weather.weatherforecasapi.exceptions.CityNotFoundException;
 import com.weather.weatherforecasapi.models.ForecastMapper;
 import com.weather.weatherforecasapi.models.forecast.Forecast;
+import com.weather.weatherforecasapi.models.forecast.SixteenDaysForecast;
+import com.weather.weatherforecasapi.models.forecast.ThreeDaysForecast;
 import com.weather.weatherforecasapi.storage.ApiKeyStorageInMemory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,5 +44,29 @@ public class WeatherForecastServiceImpl implements WeatherForecastService {
             throw new CityNotFoundException("City was not found");
         Forecast forecast = client.getCurrentWeather(geo.get(0), apiKey);
         return ForecastMapper.toForecastDto(forecast);
+    }
+
+    @Override
+    public SixteenDaysForecast getDailyForecast(String city, String apiKey, Integer cnt) {
+        if (apiKey != null)
+            storage.setApiKey(apiKey);
+        if (storage.getApiKey() == null)
+            throw new ApiKeyNotFoundException("The api key was not found");
+        List<GeoResponseDto> geo = client.getGeo(city, apiKey);
+        if (geo == null)
+            throw new CityNotFoundException("City was not found");
+        return client.getDailyForecast(geo.get(0), apiKey, cnt);
+    }
+
+    @Override
+    public ThreeDaysForecast getThreeHoursForecast(String city, String apiKey, Integer cnt) {
+        if (apiKey != null)
+            storage.setApiKey(apiKey);
+        if (storage.getApiKey() == null)
+            throw new ApiKeyNotFoundException("The api key was not found");
+        List<GeoResponseDto> geo = client.getGeo(city, apiKey);
+        if (geo == null)
+            throw new CityNotFoundException("City was not found");
+        return client.getThreeDaysForecast(geo.get(0), apiKey, cnt);
     }
 }

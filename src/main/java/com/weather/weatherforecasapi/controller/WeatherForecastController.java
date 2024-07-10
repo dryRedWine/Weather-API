@@ -1,6 +1,8 @@
 package com.weather.weatherforecasapi.controller;
 
 import com.weather.weatherforecasapi.dto.forecastDto.ForecastDto;
+import com.weather.weatherforecasapi.models.forecast.SixteenDaysForecast;
+import com.weather.weatherforecasapi.models.forecast.ThreeDaysForecast;
 import com.weather.weatherforecasapi.service.WeatherForecastService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +33,21 @@ public class WeatherForecastController {
         return weatherForecastService.getCurrentData(city, apiKey);
     }
 
-//    @GetMapping("/dailyForecastSixteenDays")
-//    @ResponseStatus(HttpStatus.OK)
-//    public Forecast getForecastSixteenDays(@RequestBody Forecast forecast) {
-//        log.info("Current weather forecast");
-//        return weatherForecastService.getCurrentData(forecast);
-//    }
+    @GetMapping("/dailyForecastSixteenDays")
+    @ResponseStatus(HttpStatus.OK)
+    public SixteenDaysForecast getDailyForecast(@RequestParam @NotBlank String city,
+                                                @RequestParam(required = false) String apiKey,
+                                                @RequestParam(required = false) Integer cnt) {
+        log.info("Daily forecast for {}", city);
+        return weatherForecastService.getDailyForecast(city, apiKey, cnt);
+    }
+
+    @GetMapping("/threeHoursForecast")
+    @ResponseStatus(HttpStatus.OK)
+    public ThreeDaysForecast getThreeHoursForecast(@RequestParam @NotBlank String city,
+                                                   @RequestParam(required = false) String apiKey,
+                                                   @RequestParam(required = false) Integer cnt) {
+        log.info("Get three hours forecast for {}", city);
+        return weatherForecastService.getThreeHoursForecast(city, apiKey, cnt);
+    }
 }

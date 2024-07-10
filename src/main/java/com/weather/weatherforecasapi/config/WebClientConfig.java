@@ -1,6 +1,7 @@
 package com.weather.weatherforecasapi.config;
 
 import com.weather.weatherforecasapi.client.WeatherWebClient;
+import okhttp3.OkHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -25,5 +26,10 @@ public class WebClientConfig {
                 .baseUrl("https://api.openweathermap.org")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
+    }
+
+    @Bean
+    public OkHttpClient okHttpClient() {
+        return new OkHttpClient();
     }
 }
